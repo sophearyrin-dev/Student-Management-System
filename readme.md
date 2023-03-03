@@ -95,6 +95,72 @@ docker-compose.yml
 Then we take the docker-compose.yml upload to Elastic Beanstalk
 Check it out: http://studentmgtproject-env.eba-xe3x22t9.us-east-2.elasticbeanstalk.com/
 
+## PostgreSQL
+
+Install postgreSQL running on Docker
+Step1:
+Create network: docker network create db
+Remove network: docker network rm db
+Step2:
+-	create a folder name data-db
+     cd into that folder : docker run --name db -p 5432:5432 --network=db -v "$PWD:/var/lib/postgresql/data" -e POSTGRES_PASSWORD=password -d postgres:alpine
+
+If you faced any error: remove that db container, then run it again
+
+- Connecting to db using PSQL Container
+```
+docker run -it --rm --network=db postgres:alpine psql -h db -U postgres
+```
+
+then input your password: password
+to show all database in postgre: \l
+to quit PostgreSQL: \q
+create databse: create database hello
+delete database: drop database hello
+To quit from progre environment : \q
+
+## Spring Data JPA
+
+Add dependency in pom.xml
+```html
+<dependency>
+<groupId>org.springframework.boot</groupId>
+<artifactId>spring-boot-starter-data-jpa</artifactId>
+</dependency>
+
+<dependency>
+   <groupId>org.postgresql</groupId>
+   <artifactId>postgresql</artifactId>
+   <scope>runtime</scope>
+</dependency>
+```
+In resource: application.resource
+
+```html
+spring.datasource.url=jdbc:postgresql://localhost:5432/studentmgt
+spring.datasource.username=
+spring.datasource.password=
+spring.jpa.hibernate.ddl-auto=create-drop
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
+spring.jpa.properties.hibernate.format_sql=true
+```
+
+Note: If You use command “create database studentmgt” then nothing happen then try with “CREATE DATABASE studentmgt;”
+
+To map a class with database in progreSQL , we use Spring Data JPA
+
+@Entity
+@Table
+
+To connect to database use: \c studentmgt
+To see all table in the studentmgt database: \dt
+To see all record in table student: select * from student;
+To see the sequence: \d
+ 
+
+
+
 
 
 
